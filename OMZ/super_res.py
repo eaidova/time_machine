@@ -1,32 +1,31 @@
 import os
 import cv2
 import sys
+from glob import glob
 import argparse
 import numpy as np
 import logging as log
 from openvino.inference_engine import IENetwork, IECore
+# from pipelines import AsyncPipeline, get_user_config
 
 
 
 
-def process(source, device, configPath):        
+def process(source, net, exec_net, ie=None, model=None, d=None):
     k = 4
-    ie = IECore()
-    net = ie.read_network(model=configPath)
+    if not exec_net:
+        net = ie.read_network(model=model)
+        net.reshape({"0":(1, 3, source.shape[0], source.shape[1]), "1":(1, 3, source.shape[0]*k, source.shape[1]*k)})
+        exec_net = ie.load_network(network=net, device_name=d)
     out_blob = next(iter(net.outputs))
     in1 = [source.transpose((2, 0, 1))]
     in2_cubic = cv2.resize(source, (source.shape[1] * k, source.shape[0] * k),interpolation=cv2.INTER_CUBIC)
     in2 = [in2_cubic.transpose((2, 0, 1))]
-    # print("preprocessed image1 shape",np.shape(in1))
-    # net reshape
-    net.reshape({"0":(1,3,source.shape[0],source.shape[1]), "1":(1,3,in2_cubic.shape[0],in2_cubic.shape[1])})
-    exec_net = ie.load_network(network=net, device_name=device)
-    # print("shape0", self.net.inputs['0'].shape)
     # res
     output = exec_net.infer(inputs = {'0': in1, "1": in2})
     output = output[out_blob][0]
     output = output.transpose(1,2,0)
-    return output,in2_cubic
+    return [output,in2_cubic]
 
 
 def build_argparser():
@@ -34,7 +33,7 @@ def build_argparser():
     parser.add_argument('-m', '--model', help='Path to an .xml \
         file with a trained model.', required=True, type=str)
     parser.add_argument('-i', '--input', help='Path to \
-        image file', required=True, type=str)
+        images folder', required=True, type=str)
     # parser.add_argument('-l', '--cpu_extension', help='MKLDNN \
     #     (CPU)-targeted custom layers.Absolute path to a shared library \
     #     with the kernels implementation', type=str, default=None)
@@ -42,24 +41,33 @@ def build_argparser():
         device to infer on; CPU, GPU, FPGA or MYRIAD is acceptable. \
         Sample will look for a suitable plugin for device specified \
         (CPU by default)', default='CPU', type=str)
+    parser.add_argument('--height', help='Height of the image', required=True, type=int)
+    parser.add_argument('--width', help='Width of the image', required=True, type=int)
     return parser
 
-
+# альтернативный вариант (который я не реализовал) - запоминать последнее разрешение картинки и обновлять секту при смене разрешения. И тогда отсортировать изображения так, чтобы было минимальное количество изменений разрешений
 def main():
     log.basicConfig(format="[ %(levelname)s ] %(message)s",
         level=log.INFO, stream=sys.stdout)
     args = build_argparser().parse_args()
 
-    log.info("Start IE classification sample")
+    inputs = glob(args.input + "/*")
+    ie = IECore()
 
-    # Read image
-    img = cv2.imread(args.input)
-        
-    # Process image
-    res,cubic = process(img, args.device, args.model)
-    # print(res.shape)
-    cv2.imshow("cubic interpolation", cubic)
-    cv2.imshow("super resolution", res)
+    net = None
+    exec_net = None
+    if args.height != 0 and args.width != 0:
+        net = ie.read_network(model=args.model)
+        net.reshape({"0":(1, 3, args.width, args.height), "1":(1, 3, args.width*4, args.height*4)})
+        exec_net = ie.load_network(network=net, device_name=args.device)
+
+    iter = 0
+    for i in inputs:
+        iter +=1
+        res,cubic = process(cv2.imread(i), net, exec_net, ie, args.model, args.device)
+        # resaults.add([res,cubic]])
+        cv2.imshow("cubic interpolation" + str(iter), cubic)
+        cv2.imshow("super interpolation" + str(iter), res)
     cv2.waitKey(0) 
     cv2.destroyAllWindows()
 
