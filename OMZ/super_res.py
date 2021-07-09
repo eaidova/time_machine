@@ -25,7 +25,7 @@ def process(source, net, exec_net, ie=None, model=None, d=None):
     output = exec_net.infer(inputs = {'0': in1, "1": in2})
     output = output[out_blob][0]
     output = output.transpose(1,2,0)
-    return [output,in2_cubic]
+    return output,in2_cubic, net, exec_net
 
 
 def build_argparser():
@@ -45,7 +45,18 @@ def build_argparser():
     parser.add_argument('--width', help='Width of the image', required=True, type=int)
     return parser
 
-# альтернативный вариант (который я не реализовал) - запоминать последнее разрешение картинки и обновлять секту при смене разрешения. И тогда отсортировать изображения так, чтобы было минимальное количество изменений разрешений
+
+def resizeImages():
+    inputs = glob("images" + "/*")
+    for imgname in inputs:
+        img = cv2.imread(imgname)
+        img = cv2.resize(img,(256,256),interpolation=cv2.INTER_NEAREST)
+        cv2.imshow(imgname, img)
+        cv2.imwrite("converted/"+imgname[imgname.rfind("\\")+1:],img)
+
+# resizeImages()
+
+# можно отсортировать изображения так, чтобы было минимальное количество изменений разрешений
 def main():
     log.basicConfig(format="[ %(levelname)s ] %(message)s",
         level=log.INFO, stream=sys.stdout)
@@ -62,12 +73,21 @@ def main():
         exec_net = ie.load_network(network=net, device_name=args.device)
 
     iter = 0
+    prevRes = [0,0]
     for i in inputs:
         iter +=1
-        res,cubic = process(cv2.imread(i), net, exec_net, ie, args.model, args.device)
+        img = cv2.imread(i)
+        res,cubic = None,None
+        if prevRes[0] != np.shape(img)[0] or prevRes[1] != np.shape(img)[1]:
+            print("new resolution")
+            prevRes[0] = np.shape(img)[0]
+            prevRes[1] = np.shape(img)[1]
+            res,cubic, net,exec_net = process(img, None, None, ie, args.model, args.device)
+        else:    
+            res,cubic, net,exec_net = process(img, net, exec_net, ie, args.model, args.device)
         # resaults.add([res,cubic]])
-        cv2.imshow("cubic interpolation" + str(iter), cubic)
-        cv2.imshow("super interpolation" + str(iter), res)
+        # cv2.imshow("cubic interpolation " + str(iter), cubic)
+        cv2.imshow("super resolution " + str(iter), res)
     cv2.waitKey(0) 
     cv2.destroyAllWindows()
 
