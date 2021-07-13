@@ -24,7 +24,7 @@ def process_single_image_super_resolution_1032(source, net, exec_net, ie=None, m
     output = exec_net.infer(inputs = {'0': in1, "1": in2})
     output = output[out_blob][0]
     output = output.transpose(1,2,0)
-    return output,in2_cubic, net, exec_net
+    return output*255,in2_cubic, net, exec_net
 
 
 def process_single_image_super_resolution_1033(source, net, exec_net, ie=None, model=None, d=None):
@@ -41,12 +41,50 @@ def process_single_image_super_resolution_1033(source, net, exec_net, ie=None, m
     output = exec_net.infer(inputs = {'0': in1, "1": in2})
     output = output[out_blob][0]
     output = output.transpose(1,2,0)
-    return output,in2_cubic, net, exec_net
+    return output*255,in2_cubic, net, exec_net
 
 def process_pytorch_example():
     pass
 
-def process_RCAN():
+def process_RCAN(source, net, exec_net, ie=None, model=None, d=None):
+    k = 2
+    if not exec_net:
+        net = ie.read_network(model=model)
+        # while True:
+        #     input = next(iter(net.inputs))
+        #     print(net[input])
+
+        # print(net.inputs['input'].shape)
+        # net.reshape({"input":(1, 3, source.shape[0], source.shape[1])})
+        exec_net = ie.load_network(network=net, device_name=d)
+    out_blob = next(iter(net.outputs))
+    in1 = cv2.resize(source, (640,360), interpolation=cv2.INTER_LINEAR)
+    in1 = [in1.transpose((2, 0, 1))]
+    in2_cubic = None
+    # in2_cubic = cv2.resize(source, (source.shape[1] * k, source.shape[0] * k),interpolation=cv2.INTER_CUBIC)
+    # in2 = [in2_cubic.transpose((2, 0, 1))]
+    # res
+    output = exec_net.infer(inputs = {'input': in1})
+    output = output[out_blob][0]
+    output = output.transpose(1,2,0)
+    return output,in2_cubic, net, exec_net
+
+def small_WDSR_x2():
+    pass
+
+def small_WDSR_x3():
+    pass
+
+def small_WDSR_x4():
+    pass
+
+def large_WDSR_x2():
+    pass
+
+def large_WDSR_x3():
+    pass
+
+def large_WDSR_x4():
     pass
 
 def build_argparser():
@@ -79,6 +117,8 @@ def resizeImages():
 
 # можно отсортировать изображения так, чтобы было минимальное количество изменений разрешений
 def main():
+    process = process_RCAN
+
     log.basicConfig(format="[ %(levelname)s ] %(message)s",
         level=log.INFO, stream=sys.stdout)
     args = build_argparser().parse_args()
@@ -100,15 +140,19 @@ def main():
         img = cv2.imread(i)
         res,cubic = None,None
         if prevRes[0] != np.shape(img)[0] or prevRes[1] != np.shape(img)[1]:
-            print("new resolution")
+            # print("new resolution")
             prevRes[0] = np.shape(img)[0]
             prevRes[1] = np.shape(img)[1]
             res,cubic, net,exec_net = process(img, None, None, ie, args.model, args.device)
         else:    
             res,cubic, net,exec_net = process(img, net, exec_net, ie, args.model, args.device)
         # resaults.add([res,cubic]])
-        cv2.imshow("cubic interpolation " + str(iter), cubic)
-        cv2.imshow("super resolution " + str(iter), res)
+
+        # TODO mkdir по пути входа.
+        cv2.imwrite("super_res"+i[i.rfind("\\")+1:],res)
+        print(i, "done")
+        # cv2.imshow("cubic interpolation " + str(iter), cubic)
+        # cv2.imshow("super resolution " + str(iter), res)
     cv2.waitKey(0) 
     cv2.destroyAllWindows()
 
