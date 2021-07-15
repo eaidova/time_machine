@@ -1,3 +1,5 @@
+![Time Machine header](https://user-images.githubusercontent.com/58187114/125828115-b1d74ae2-c2d8-458c-afbd-cdddf95b8874.jpg)
+
 # time_machine
 Summer Camp 2021 project
 superres models https://disk.yandex.ru/d/Y76kWsbCcBdRdw
