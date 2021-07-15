@@ -16,8 +16,8 @@ def build_argparser():
                       help='Show this help message and exit.')
     args.add_argument('-i', '--input', type=str, required=True,
                       help='Required. Path to input image')
-    args.add_argument('-m1', dest='model_1', default='colorization-v2', 
-                      help='Path to the model_1')
+    args.add_argument('-m1', '--model_1', help='Path to an .xml \
+        file with a trained model.', required=True, type=str)
     args.add_argument('-m2', '--model_2', help='Path to an .xml \
         file with a trained model.', required=True, type=str)
     # parser.add_argument('-l', '--cpu_extension', help='MKLDNN \
@@ -27,6 +27,7 @@ def build_argparser():
         device to infer on; CPU, GPU, FPGA or MYRIAD is acceptable. \
         Sample will look for a suitable plugin for device specified \
         (CPU by default)', default='CPU', type=str)
+    args.add_argument('-o', '--output', help='Path to output folder', default="output", type=str)
 
     return parser
 
@@ -228,12 +229,24 @@ def main():
             res,cubic, net,exec_net = process(img, net, exec_net, ie, args.model_2, args.device)
         # resaults.add([res,cubic]])
 
-        # TODO mkdir по пути входа.
+        try:
+            os.makedirs(args.output)
+        except:
+            pass
+        try:
+            os.makedirs(args.output + "\\super_res")
+        except:
+            pass
+        try:
+            os.makedirs(args.output + "\\color_super_res")
+        except:
+            pass
+
         print(i, "done_superres")
-        cv.imwrite("super_res"+i[i.rfind("\\")+1:],res)
+        cv.imwrite(args.output + "\\super_res\\" + i[i.rfind("\\")+1:],res)
         img = color_image(res, net_1, exec_net_1)
         print(i, "done_colorization")
-        cv.imwrite("color_superres"+i[i.rfind("\\")+1:],img)
+        cv.imwrite(args.output + "\\color_super_res\\" + i[i.rfind("\\")+1:],img)
        
         # cv.imshow("cubic interpolation " + str(iter), cubic)
         # cv.imshow("super resolution " + str(iter), res)
@@ -244,4 +257,4 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main() or 0)
-
+    
