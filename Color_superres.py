@@ -230,10 +230,6 @@ def main():
         # resaults.add([res,cubic]])
 
         try:
-            os.makedirs(args.output)
-        except:
-            pass
-        try:
             os.makedirs(args.output + "\\super_res")
         except:
             pass
@@ -257,4 +253,3 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main() or 0)
-    
