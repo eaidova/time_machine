@@ -59,14 +59,18 @@ For super_resolution, you can use various neural networks
 ![image](https://user-images.githubusercontent.com/58187114/126706063-9b2267ee-c530-40ed-9640-9441c9e14a66.png)
 
 # How to do a pipeline of several networks?
-![image](https://user-images.githubusercontent.com/58187114/126708664-33aaad5d-2ec2-4846-a4f3-c553a5c78735.png)
 
 We use 4 neural networks that need to be connected somehow. What are the options?
 The simplest one is `synchronous`. We perform infer of each network in turn, passing images from one to the other. The method is simple and convenient in terms of writing code, but it has an obvious disadvantage in the form of insufficient performance.
 
+![image](https://user-images.githubusercontent.com/58187114/126714167-e04e9780-7c0c-41fd-9744-adf467c22eea.png)
+
 The next way is to use the `AsyncPipeline` class ready from open model zoo. Thanks to it, we can conveniently submit images to the network input and get the result we need. That is, preprocessing and postprocessing are already included in the model class, and we also do not need to wait for infer to be executed. And for one grid, this option looks great. However, in the case of four grids, the problem arises - how to build all this. That is, you can use several asink pipelines, but because of this there will be an incomprehensible pile of code that will be difficult to compile and disassemble.
 
-That's why we wrote our `own pipeline`. What is its essence? We are creating 4 instances of model classes. Each instance at the stage of its initialization starts a new thread that monitors the network input and decides whether it is time to call infer. Thus, in the code we just have 4 instances that are already fully ready to work. Next, we need to run a loop that will check whether it is possible to submit an image to the input of the first network and correspondingly submit this image. The result can be obtained in two ways - either just constantly check the output of the last model in the loop, or add a callback to the last model, which is called whenever the image has been processed.
+![image](https://user-images.githubusercontent.com/58187114/126714180-aa93b2ed-69ee-4be0-a258-a1a063471e5c.png)
+
+
+That's why we wrote our `custom pipeline`. What is its essence? We are creating 4 instances of model classes. Each instance at the stage of its initialization starts a new thread that monitors the network input and decides whether it is time to call infer. Thus, in the code we just have 4 instances that are already fully ready to work. Next, we need to run a loop that will check whether it is possible to submit an image to the input of the first network and correspondingly submit this image. The result can be obtained in two ways - either just constantly check the output of the last model in the loop, or add a callback to the last model, which is called whenever the image has been processed.
 
 And a little bit about the `nuances of our pipeline`. Initially, we wanted to make the threads that monitor the readiness to start the infer go into waiting and wake up as necessary. However, Python did not allow us to do this, and the threads were awakened much later than the moment when we needed it. Our threads never go into waiting, but simply fall asleep for 0.1 seconds at each iteration of an infinite loop.
 
