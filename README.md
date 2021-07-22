@@ -11,12 +11,16 @@ Color_deoldify.py
 Color_deoldify_old.py
 
 How to use:
+Setup Openvino environment: "C:\Program Files (x86)\Intel\openvino_2021\bin\setupvars.bat"
 
 python <model_name>.py -m <Path to model>.xml -i <Path to image>.<format> !only for colorization_v2_old! -coeffs <Path to .npy file with color coefficients>.npy
 
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  
   
 Video models:
+  
+How to use:
+Setup Openvino environment: "C:\Program Files (x86)\Intel\openvino_2021\bin\setupvars.bat"
 
 Color_colorization_v2_video.py
 Color_deoldify_video.py
