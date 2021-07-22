@@ -94,6 +94,8 @@ Install requirements
 Start script
 >main.py
 
+When processing a video, do not forget to specify the maximum number of frames for processing in line 58
+
 If you want to apply other neural networks, go to main.py and uncomment what you want to use and comment out what you don't want to use
 
 **Please make sure that you are sending the correct data to log in to the network**
