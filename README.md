@@ -44,7 +44,7 @@ For colorization, you can use various neural networks
 
 # Super resolution
 ![image](https://user-images.githubusercontent.com/58187114/126703539-21d47bfa-fc50-4440-8e48-4d9bd794671a.png)
-![image](https://user-images.githubusercontent.com/58187114/126703546-babc103a-80d5-4382-99c5-fdd68122c2f2.png)
+![image](https://user-images.githubusercontent.com/58187114/126713514-4ecb3e45-58bf-4d77-b4e8-7abba3b6cce8.png)
 
 For super_resolution, you can use various neural networks
 
