@@ -14,3 +14,6 @@ colorization models https://disk.yandex.ru/d/K2rn-rrJYxQM9w
 It's how to start script -
 
 Color_superres.py -i images -m1 colorization-v2.xml -m2 single-image-super-resolution-1033.xml
+
+How to use:
+Setup Openvino environment: "C:\Program Files (x86)\Intel\openvino_2021\bin\setupvars.bat"
