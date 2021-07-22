@@ -25,8 +25,38 @@ For image restoration, we use `scretch_detector`, this is a pre-trained U-net fo
 
 ![image](https://user-images.githubusercontent.com/58187114/126701375-ef6325e3-5915-4162-8488-24a5110dffc6.png)
 
-*FPS is specified using an Intel core i5-8300h processor*
+*FPS is specified using an Intel core i5-8300h processor 
 
+***MOS - Mean Opinion Score***
+
+# Colorization
+![image](https://user-images.githubusercontent.com/58187114/126702572-a20db2fb-415c-43f9-a695-4d578a9ba7c4.png)
+
+For colorization, you can use various neural networks
+
+![image](https://user-images.githubusercontent.com/58187114/126702890-ba7feecb-a624-417c-b341-b9582f05167e.png)
+
+*FPS is specified using an Intel core i5-8300h processor **FP16 
+
+![image](https://user-images.githubusercontent.com/58187114/126703004-36d0ac64-69b0-4e84-b2f4-090736a710a9.png)
+![image](https://user-images.githubusercontent.com/58187114/126703048-b3b4d0e9-3522-404a-b976-d563d4c2e38b.png)
+![image](https://user-images.githubusercontent.com/58187114/126703076-219c8c18-ac28-406e-bc3e-271ce25e308c.png)
+
+# Super resolution
+![image](https://user-images.githubusercontent.com/58187114/126703539-21d47bfa-fc50-4440-8e48-4d9bd794671a.png)
+![image](https://user-images.githubusercontent.com/58187114/126703546-babc103a-80d5-4382-99c5-fdd68122c2f2.png)
+
+For super_resolution, you can use various neural networks
+
+![image](https://user-images.githubusercontent.com/58187114/126703722-1e29961f-ac8a-44a1-9e84-af3c48b71e2d.png)
+ 
+*FPS is specified using an Intel core i5-8300h processor **FP16 
+
+***PSNR - peak signal-to-noise ratio***
+
+![image](https://user-images.githubusercontent.com/58187114/126704030-84c50244-d6de-471e-8abb-ebeec5c38e4b.png)
+![image](https://user-images.githubusercontent.com/58187114/126704064-b37cd1ff-6912-4d94-a52e-746d1b839e7e.png)
+![image](https://user-images.githubusercontent.com/58187114/126706063-9b2267ee-c530-40ed-9640-9441c9e14a66.png)
 
 # How to use
 
@@ -44,3 +74,25 @@ Color_superres.py -i images -m1 colorization-v2.xml -m2 single-image-super-resol
 
 How to use:
 Setup Openvino environment: "C:\Program Files (x86)\Intel\openvino_2021\bin\setupvars.bat"
+
+# Links to models
+
+**Photo restoration**
+* `scratch_detector` - https://github.com/microsoft/Bringing-Old-Photos-Back-to-Life
+* `gmcnn-places2-tf` - https://github.com/openvinotoolkit/open_model_zoo/tree/master/models/public/gmcnn-places2-tf
+
+**Colorization**
+* `Deoldify ONNX` - https://github.com/KeepGoing2019HaHa/AI-application/tree/master/deoldify/ncnn
+* `Deoldify` - https://github.com/jantic/DeOldify
+* `Colorization-v2` - https://github.com/openvinotoolkit/open_model_zoo/tree/master/models/public/colorization-v2
+* `Colorization-v2_old` - https://github.com/richzhang/colorization/tree/caffe
+* `Colorization-siggraph` - https://github.com/openvinotoolkit/open_model_zoo/tree/master/models/public/colorization-siggraph
+
+**Super resolution**
+* `single-image-super-resolution-1033` - https://github.com/openvinotoolkit/open_model_zoo/tree/master/models/intel/single-image-super-resolution-1033
+* `single-image-super-resolution-1032` - https://github.com/openvinotoolkit/open_model_zoo/tree/master/models/intel/single-image-super-resolution-1032
+* `EDSR` - https://github.com/krasserm/super-resolution
+* `RCAN` - https://github.com/yulunzhang/RCAN
+* `SRGAN` - https://github.com/krasserm/super-resolution
+
+*You can find the models converted to ONNX and IR implementation at the link https://disk.yandex.ru/d/ZYie6Q8k4Mf8LQ*
