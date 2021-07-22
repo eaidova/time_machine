@@ -59,21 +59,32 @@ For super_resolution, you can use various neural networks
 ![image](https://user-images.githubusercontent.com/58187114/126706063-9b2267ee-c530-40ed-9640-9441c9e14a66.png)
 
 # How to use
+Install OpenVino 2021.04
+>https://software.intel.com/content/www/us/en/develop/tools/openvino-toolkit.html
+
+Clone repository
+>git clone https://github.com/eaidova/time_machine
 
 Download models 
 >https://disk.yandex.ru/d/ZYie6Q8k4Mf8LQ
+Unzip archive into your directory
 
+Create virtual environment 
+>mkdir time_machine && cd time_machine
+>python -m venv openvinoenv
 
+Activate it
+>python 'time-machine\openvinoenv\Scripts\Activate'
 
+Install requirements
+>pip install numpy
 
-!!!you need to create images directory with your images!!!
+Start script
+>main.py
 
-It's how to start script -
+If you want to apply other neural networks, go to main.py and uncomment what you want to use and comment out what you don't want to use
 
-Color_superres.py -i images -m1 colorization-v2.xml -m2 single-image-super-resolution-1033.xml
-
-How to use:
-Setup Openvino environment: "C:\Program Files (x86)\Intel\openvino_2021\bin\setupvars.bat"
+**Please make sure that you are sending the correct data to log in to the network**
 
 # Links to models
 
