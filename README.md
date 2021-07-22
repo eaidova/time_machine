@@ -119,3 +119,8 @@ If you want to apply other neural networks, go to main.py and uncomment what you
 * `SRGAN` - https://github.com/krasserm/super-resolution
 
 *You can find the models converted to ONNX and IR implementation at the link https://disk.yandex.ru/d/ZYie6Q8k4Mf8LQ*
+
+
+
+
+Contacts sae.2020@bk.ru
