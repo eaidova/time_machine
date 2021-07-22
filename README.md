@@ -27,8 +27,6 @@ For image restoration, we use `scretch_detector`, this is a pre-trained U-net fo
 
 *FPS is specified using an Intel core i5-8300h processor 
 
-***MOS - Mean Opinion Score***
-
 # Colorization
 ![image](https://user-images.githubusercontent.com/58187114/126702572-a20db2fb-415c-43f9-a695-4d578a9ba7c4.png)
 
@@ -37,6 +35,8 @@ For colorization, you can use various neural networks
 ![image](https://user-images.githubusercontent.com/58187114/126702890-ba7feecb-a624-417c-b341-b9582f05167e.png)
 
 *FPS is specified using an Intel core i5-8300h processor **FP16 
+
+***MOS - Mean Opinion Score***
 
 ![image](https://user-images.githubusercontent.com/58187114/126703004-36d0ac64-69b0-4e84-b2f4-090736a710a9.png)
 ![image](https://user-images.githubusercontent.com/58187114/126703048-b3b4d0e9-3522-404a-b976-d563d4c2e38b.png)
