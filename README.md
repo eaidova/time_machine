@@ -8,6 +8,11 @@ scratch_detection: https://drive.google.com/file/d/1jyWva9O5E3DB_7iozgzG_Ld8WYsp
 
 images_inpainting: https://docs.openvinotoolkit.org/2021.3/omz_models_model_gmcnn_places2_tf.html
 
+preparation:
+1) download and convert models to .bin .xml format
+2) set the openVINO environment (setupvars.bat)
+3) start the execution of the program, passing the path to the models, the path to the image and the path to save the results
+
 usage algorithm
 1) upload a photo
 2) convert it to grayscale and normalize the data
