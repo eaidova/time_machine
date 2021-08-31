@@ -32,16 +32,17 @@ def main(config):
     mask = np.squeeze(out['output'])
     mask[mask >= 0.5] = 1.
     mask[mask < 0.5] = 0.
-    #res_mask = mask.copy()
+    
+    #mask expansion
+    res_mask = mask.copy()
     h,w, = mask.shape
     for i in range(int(h/2-200),int(h/2-140),1):
         for j in range(int(w/2-30),int(w/2+30),1):
-            mask[i,j]=1
-           #if mask[i,j] == 1:
-           #     for y in range(-5,5,1):
-           #         for x in range(-5,5,1):
-           #             res_mask[i+y,j+x]=1
-    #mask = res_mask
+           if mask[i,j] == 1:
+                for y in range(-5,5,1):
+                    for x in range(-5,5,1):
+                        res_mask[i+y,j+x]=11
+    mask = res_mask
     cv2.imwrite(config.output_dir+"\\mask\\8.png", mask*255)
     
     #inpainting
